@@ -1,11 +1,12 @@
 <template>
     <tr>
-        <td><i class="bi" :class="dado.checked ? 'bi-check text-success' : 'bi-clock text-danger'"></i></td>
+        <td><i class="bi" :class="dado.estado ? 'bi-check text-success' : 'bi-clock text-danger'"></i></td>
         <td>{{dado.nome}}</td>
         <td>{{dado.profissao}}</td>
         <td>{{dado.idade}}</td>
-        <td>{{dado.entrou}}</td>
-        <td>{{dado.salario}}</td>
+        <td>{{dado.ano}}</td>
+        <td v-if="!isNaN(dado.salario)">{{dado.salario}}</td>
+        <td v-else>Não Disponível</td>
         <td>
             <button @click="$emit('toggle',dado)" class="btn btn-link" style="font-size-1.5rem">
                 <span v-if="dado.checked === true">Desmarcar</span>
