@@ -7,13 +7,13 @@
                     <h3>Adicionar usuários</h3>
                 </div>
                 <div class="card-body">
-                    <form @submit.prevent="addDado(dado)">
+                    <form @submit.prevent="addDado(src.dado)">
                         <div class="input-group justify-content-center">
-                            <input class="form-input" v-model="dado.nome" type="text" placeholder="Digite o nome">
-                            <input class="form-input" v-model="dado.profissao" type="text" placeholder="Digite a profissão">
-                            <input class="form-input" v-model="dado.idade" type="text" placeholder="Digite a idade">
-                            <input class="form-input" v-model="dado.entrou" type="text" placeholder="Digite o inicio">
-                            <input class="form-input" v-model="dado.salario" type="text" placeholder="Digite o salário">
+                            <input class="form-input" v-model="src.dado.nome" type="text" placeholder="Digite o nome">
+                            <input class="form-input" v-model="src.dado.profissao" type="text" placeholder="Digite a profissão">
+                            <input class="form-input" v-model="src.dado.idade" type="text" placeholder="Digite a idade">
+                            <input class="form-input" v-model="src.dado.ano" type="text" placeholder="Digite o inicio">
+                            <input class="form-input" v-model="src.dado.salario" type="text" placeholder="Digite o salário">
                             <br>
                         </div>
                         <div class="justify-content-center text-center">
@@ -38,25 +38,39 @@
                     </tr>
                 </thead>
                 <tbody class="justify-content-center text-center">
-                    <ObjectData v-for="d in dados" :key="d.id" :dado="d" @toggle="toggleDado" @remover="removerDado"></ObjectData>
+                    <ObjectData v-for="d in src.users" :key="d.id" :dado="d" @toggle="toggleDado" @remover="removerDado"></ObjectData>
                 </tbody>
             </table>
         </div>
+        <p v-for="u in src.users" v-bind:key="u.id">{{u}}</p>
     </div>
 </template>
 
 <script>
 import ObjectData from './ObjectData.vue'
-import {reactive, toRefs} from '../../../node_modules/vue/dist/vue'
+import api from '../../services/api'
 
+// import Vue from 'vue'
+// const vue = new Vue();
+// console.log(Vue.onMouted())
 export default {
     components: { ObjectData },
-    setup(){
-        const data = reactive({
-            dados: [], dado: {checked: false}
+    data(){
+        const src = {
+            dado: {estado: false},
+            users: {}
+        }
+
+        // Vue.onMounted(async () => {
+        //     const response = await api.all()
+        //     src.users = response.data
+        // })
+
+        api.all().then(response =>{
+            src.users = response.data
         })
 
-        return {...toRefs(data)}
+        return {src}
     },
 
     // data(){
@@ -64,26 +78,24 @@ export default {
     // },
     methods: {
         addDado(dado){
-            console.log(this.dado);
-            dado.id = Date.now();
-            this.dados.push(dado);
-            this.dado = {checked: false};
+            this.src.users.push(dado);
+            this.src.dado = {estado: false};
+            api.store(dado) // Requisição de API
         },
 
         toggleDado(dado){
-            const index = this.dados.findIndex(item => item.id === dado.id);
+            const index = this.src.users.findIndex(item => item.id === dado.id);
             if(index > -1){
-                const checked = !this.dados[index].checked;
-                this.dados[index].checked = checked;
-                console.log(this.dados[index]);
+                const user = this.src.users[index]
+                user.estado =  !user.estado ? 1 : 0
+                api.update(user,user.id) // Requisição de API
             }
         },
         removerDado(rdado){
-            var index = this.dados.findIndex(item => item.id === rdado.id);
-            console.log(index+" "+this.dados[index].nome)
+            var index = this.src.users.findIndex(item => item.id === rdado.id);
             if(index > -1){
-
-                this.dados.splice(index,1);
+                this.src.users.splice(index,1);
+                api.destroy(rdado.id) // Requisição de API
             }
         }
     }

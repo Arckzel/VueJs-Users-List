@@ -2,7 +2,7 @@
 
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use app\Http\Controllers\api\UserController;
+// use app\Http\Controllers\api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +20,5 @@ use app\Http\Controllers\api\UserController;
 // });
 
 // Route::middleware('auth:api')->get('/users', 'api\UserController@index');
-
+// Route::get('/users',[UserController::class, 'index']);
 Route::apiResource('/users','api\UserController');

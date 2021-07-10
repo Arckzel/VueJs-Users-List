@@ -2,22 +2,20 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <Datatable></Datatable>
+                <Datatable/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import Datatable from './Datatable'
     export default {
-        methods: {
-            mounted() {
-                console.log('Component mounted.')
-            }
+        components: {
+            Datatable
         },
+        mounted() {
+            console.log('Component mounted.')
+        }
     }
 </script>
-
-<style scoped>
-
-</style>
