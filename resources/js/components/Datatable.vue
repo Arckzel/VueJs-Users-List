@@ -47,11 +47,21 @@
 
 <script>
 import ObjectData from './ObjectData.vue'
+import {reactive, toRefs} from '../../../node_modules/vue/dist/vue'
+
 export default {
     components: { ObjectData },
-    data(){
-        return {  dados: [], dado: {checked: false}  };
+    setup(){
+        const data = reactive({
+            dados: [], dado: {checked: false}
+        })
+
+        return {...toRefs(data)}
     },
+
+    // data(){
+    //     return {  dados: [], dado: {checked: false}  };
+    // },
     methods: {
         addDado(dado){
             console.log(this.dado);
